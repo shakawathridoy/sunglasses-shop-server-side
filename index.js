@@ -19,6 +19,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect((err) => {
   const sunglassesCollection = client.db("sunglassesWorld").collection("sunglasses");
   const orderCollection = client.db("sunglassesWorld").collection("orders");
+  const reviewCollection = client.db("sunglassesWorld").collection("reviews");
 
   // add place
 
@@ -26,10 +27,20 @@ client.connect((err) => {
       const result = await sunglassesCollection.insertOne(req.body)
       res.send(result);
   });
-
+  
   app.get("/products", async (req, res) => {
-      const result = await sunglassesCollection.find({}).toArray();
-      res.send(result)
+    const result = await sunglassesCollection.find({}).toArray();
+    res.send(result)
+  })
+  
+  app.post("/addReview", async (req, res)=> {
+    const result = await reviewCollection.insertOne(req.body)
+    res.send(result);
+  });
+
+  app.get("/reviews", async (req, res) => {
+    const result = await reviewCollection.find({}).toArray();
+    res.send(result)
   })
 
   // get single place 
